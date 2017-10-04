@@ -68,7 +68,11 @@
 			border-radius:50%;
 			visibility: hidden;
 			opacity: 0;
-			
+			font-size: 1.2vh;
+    		color: #757575;
+    		text-align: center;
+    		box-shadow: 1px 1px 20px 0px rgba(136, 136, 136,0.45);
+    		line-height: 10vh;
 			transition: transform 0.4s ease-in-out, visibility 0.3s ease-in-out, opacity 0.2s ease-in-out;
 		}
 		.demo#one
@@ -81,11 +85,39 @@
 			background: #AED581 url("move.png") no-repeat center;
 			background-size: contain;
 		}
+		.b, .f{
+			height:8vh;
+			width:6vh;
+			
+			position: fixed;
+			top:40vh;
+		}
+		.b{	left: 5vh;
+			background: url("back.png") no-repeat center;
+			background-size: contain;
+
+		}
+		.f{
+			background: url("forward.png") no-repeat center;
+			background-size: contain;
+			right: 5vh;
+		}
+		.info{
+			position: absolute;
+			left:50%;
+			top: 85vh;
+			font-size: 2vh;
+			transform:translate(-50%,-50%);
+			font-family: 'Raleway', sans-serif;
+		}
 
 
 	</style>
 	<body>
 		<div class="title">DRAG & DROP</div>
+		<div class="info">Drag any of the folders to anywhere on the window.</div>
+		<a href="https://rathodkuldeepsingh.github.io/microinteraction1/"><div class="b"></div></a>
+		<a href="https://rathodkuldeepsingh.github.io/microinteraction4/"><div class="f"></div></a>
 		<div class="container">
 			<div id="one" class="Folder" draggable="true"></div>
 			<div id="two" class="Folder" draggable="true"></div>
@@ -94,13 +126,14 @@
 			<div id="five" class="Folder" draggable="true"></div>
 			<div id="one" class="demo"></div>
 			<div id="two" class="demo"></div>
+
 		</div>
 		<script>
-			var number, dropnum, drop=0;
+			var number=0, dropnum=0, drop=0;
 			var posone, postwo, posthree, posfour;
 			$(document).ready(function(){
     			$(".Folder").click(function(){
-     			   $(".Folder").css({'background':'pink'});
+     			   $(".info").text("Don't just click it, Drag it!" );
   				 });
     			posone=$('.Folder#one').position();
     			postwo=$('.Folder#two').position();
@@ -111,16 +144,20 @@
 			$('.demo#one').hover(function(){
 				$(this).css({'transform':'scale(1.1) translateX(-150%)'});
 				$('.demo#two').css({'opacity':'0.8'});
+				$('.demo#one').text('Duplicate');	
 			},function(){
 				$(this).css({'transform':'scale(1) translateX(-150%)'});
 				$('.demo#two').css({'opacity':'1'});
+				$('.demo#one').text('');
 			});
 			$('.demo#two').hover(function(){
 				$(this).css({'transform':'scale(1.1) translateX(50%)'});
 				$('.demo#one').css({'opacity':'0.8'});
+				$('.demo#two').text('Move');
 			},function(){
 				$(this).css({'transform':'scale(1) translateX(50%)'});
 				$('.demo#one').css({'opacity':'1'});
+				$('.demo#two').text('');
 			});
 
 			$('.demo#one').click(function(){
@@ -130,12 +167,17 @@
 				{	
 					$('.Folder#five').css({'opacity':'1'});
 					$('.demo#one, .demo#two').css({'transform':'translateX(0)','opacity':'0','visibility':'hidden'});
+					$('.info').text('The folder got copied.');
 				}
 				else{
 					$('.Folder#'+dropnum).css({'background':'#9e9e9e'});
 					$('.Folder#Five').css({'opacity':'0','transform':'scale(0)','visibilty':'hidden'});
 					$('.demo#one, .demo#two').css({'transform':'translateX(0)','opacity':'0','visibility':'hidden'});
+					$('.info').text('The folder got copied to the selected folder.');
 				}
+				
+					
+				number=0;dropnum=0;
 			});
 			$('.demo#two').click(function(){
 				var selector='Folder#'+number;
@@ -144,12 +186,16 @@
 				{	
 					$('.Folder#five').css({'opacity':'1'});
 					$('.demo#one, .demo#two').css({'transform':'translateX(0)','opacity':'0','visibility':'hidden'});
+					$('.info').text('The folder got moved.');
 				}
 				else{
 					$('.Folder#'+dropnum).css({'background':'#9e9e9e'});
 					$('.Folder#Five').css({'opacity':'0','transform':'scale(0)','visibilty':'hidden'});
 					$('.demo#one, .demo#two').css({'transform':'translateX(0)','opacity':'0','visibility':'hidden'});
+					$('.info').text('The folder got moved to the selected folder.');
 				}
+
+				number=0;dropnum=0;
 			});
 
 			$(".Folder").draggable({
@@ -163,13 +209,14 @@
 		        start: function(event, ui) {
 		        	$(this).css({'opacity':'0.2'});
 		        	number=$(this).attr('id');
+		        	$('.info').text('You can either drop it in empty area or on any folder.');
 		  
 
 		        },
 		        stop: function(event, ui) {
-		        	
+		        	$('.info').text('Now select one of the two options.');
 		        	if(drop==0)
-		        		{
+		        		{	
 		        			$('.demo#one').css({'left':event.pageX-$('.container').offset().left,'top':event.pageY-$('.container').offset().top,'opacity':'1','transform':'translateX(-150%)','visibility':'visible'});
 				        	$('.demo#two').css({'left':event.pageX-$('.container').offset().left,'top':event.pageY-$('.container').offset().top,'opacity':'1','transform':'translateX(50%)','visibility':'visible'});
 				        	$('.Folder#five').css({'left':event.pageX-$('.container').offset().left-$('.Folder').outerWidth()/2,'top':event.pageY-$('.container').offset().top-$('.Folder').outerHeight()/2,'opacity':'0.5','visibility':'visible'});
@@ -180,8 +227,8 @@
 				      		var temppos=$('.'+selector).offset();	
 				      		$('.demo#one').css({'left':temppos.left-$('.container').offset().left+$('.'+selector).outerWidth()/2,'top':temppos.top-$('.container').offset().top+$('.'+selector).outerHeight()*0.8,'opacity':'1','transform':'translateX(-150%)','visibility':'visible'});
 				        	$('.demo#two').css({'left':temppos.left-$('.container').offset().left+$('.'+selector).outerWidth()/2,'top':temppos.top-$('.container').offset().top+$('.'+selector).outerHeight()*0.8,'opacity':'1','transform':'translateX(50%)','visibility':'visible'});
-				        	$('.Folder#five').css({'left':temppos.left-$('.container').offset().left,'top':temppos.top-$('.container').offset().top,'opacity':'0.8','transform':'scale(0.5)','visibility':'visible'});
-				        	$('.'+selector).css({'background':'#8aa7b5'});
+				        	$('.Folder#five').css({'left':temppos.left-$('.container').offset().left,'top':temppos.top-$('.container').offset().top+10,'opacity':'0.8','transform':'scale(0.5)','visibility':'visible'});
+				        	$('.'+selector).css({'background':'rgb(168, 196, 210)'});
 
 				      }
 
